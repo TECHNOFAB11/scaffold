@@ -39,6 +39,11 @@ export interface Schema {
    * delimiters is a list of delimiter overrides for files. Useful for when you have a go template within a file you want to template using scaffold.
    * */
   delimiters?: Delimiters[];
+
+  /**
+   * dependencies are files to load into the Go template before rendering. Useful to have a base/partial to import into multiple templates. Makes it possible to use "blocks".
+   * */
+  dependencies?: string[];
 }
 
 type Delimiters = {

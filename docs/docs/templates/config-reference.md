@@ -309,3 +309,33 @@ delimiters:
     left: "[["
     right: "]]"
 ```
+
+## `dependencies`
+
+dependencies are files to load into the Go template before rendering. Useful to have a base/partial to import into multiple templates. Makes it possible to use "blocks".
+
+Example:
+
+`../shared/base.md`
+```md
+{{ define "base" }}
+# Public announcement:
+{{ block "example" . }}
+- Here is some default text which can be overriden by templates.
+{{ end }}
+{{ end }}
+```
+
+```yaml
+dependencies:
+  - ../shared/base.md
+```
+
+`templates/hello.md`
+```md
+{{ define "example" }}
+- overwrites the previous content
+- Hello World!
+{{ end }}
+{{ template "base" . }}
+```
