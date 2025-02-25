@@ -21,12 +21,19 @@ type Vars map[string]any
 type opts struct {
 	delimLeft  string
 	delimRight string
+	deps []string
 }
 
 func WithDelims(left string, right string) func(*opts) {
 	return func(o *opts) {
 		o.delimLeft = left
 		o.delimRight = right
+	}
+}
+
+func WithDependencies(dependencies []string) func(*opts) {
+	return func(o *opts) {
+		o.deps = dependencies
 	}
 }
 
@@ -51,10 +58,19 @@ func New() *Engine {
 }
 
 func (e *Engine) parse(tmpl string, opt opts) (*template.Template, error) {
-	return template.New("scaffold").
+	var templ = template.New("scaffold").
 		Funcs(e.fm).
-		Delims(opt.delimLeft, opt.delimRight).
-		Parse(tmpl)
+		Delims(opt.delimLeft, opt.delimRight)
+	if len(opt.deps) == 0 {
+		return templ.Parse(tmpl)
+	}
+
+	var deps, err = templ.ParseFiles(opt.deps...)
+	if (err != nil) {
+		return nil, err
+	}
+
+	return deps.Parse(tmpl)
 }
 
 func isTemplate(s string) bool {
@@ -69,6 +85,7 @@ func (e *Engine) TmplString(str string, vars any) (string, error) {
 	opt := opts{
 		delimLeft:  "{{",
 		delimRight: "}}",
+		deps: []string{},
 	}
 
 	tmpl, err := e.parse(str, opt)
@@ -107,6 +124,7 @@ func (e *Engine) Factory(reader io.Reader, opfns ...func(*opts)) (*template.Temp
 	opt := opts{
 		delimLeft:  "{{",
 		delimRight: "}}",
+		deps: []string{},
 	}
 
 	for _, fn := range opfns {

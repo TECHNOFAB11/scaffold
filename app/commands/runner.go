@@ -77,6 +77,7 @@ func (ctrl *Controller) runscaffold(cfg runconf) error {
 
 	args := &scaffold.RWFSArgs{
 		Project: p,
+		TemplateDir: cfg.scaffolddir,
 		ReadFS:  scaffoldFS,
 		WriteFS: cfg.outputfs,
 	}

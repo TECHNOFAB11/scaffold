@@ -7,16 +7,17 @@ import (
 )
 
 type ProjectScaffoldFile struct {
-	Metadata   Metadata                  `yaml:"metadata"`
-	Skip       []string                  `yaml:"skip"`
-	Questions  []Question                `yaml:"questions"`
-	Rewrites   []Rewrite                 `yaml:"rewrites"`
-	Computed   map[string]string         `yaml:"computed"`
-	Messages   Messages                  `yaml:"messages"`
-	Inject     []Injectable              `yaml:"inject"`
-	Features   []Feature                 `yaml:"features"`
-	Presets    map[string]map[string]any `yaml:"presets"`
-	Delimiters []Delimiters              `yaml:"delimiters"`
+	Metadata     Metadata                  `yaml:"metadata"`
+	Skip         []string                  `yaml:"skip"`
+	Questions    []Question                `yaml:"questions"`
+	Rewrites     []Rewrite                 `yaml:"rewrites"`
+	Computed     map[string]string         `yaml:"computed"`
+	Messages     Messages                  `yaml:"messages"`
+	Inject       []Injectable              `yaml:"inject"`
+	Features     []Feature                 `yaml:"features"`
+	Presets      map[string]map[string]any `yaml:"presets"`
+	Delimiters   []Delimiters              `yaml:"delimiters"`
+	Dependencies []string `yaml:"dependencies"`
 }
 
 type Delimiters struct {

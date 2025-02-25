@@ -21,6 +21,7 @@ type RWFSArgs struct {
 	ReadFS  rwfs.ReadFS
 	WriteFS rwfs.WriteFS
 	Project *Project
+	TemplateDir string
 }
 
 // errSkipRender is used to skip rendering a file when a guard returns it.
@@ -301,7 +302,15 @@ func RenderRWFS(eng *engine.Engine, args *RWFSArgs, vars engine.Vars) error {
 			delimRight = delimOverride.Right
 		}
 
-		tmpl, err := eng.Factory(f, engine.WithDelims(delimLeft, delimRight))
+		// convert dependencies to absolute paths
+		var dependencies = args.Project.Conf.Dependencies
+		var prefix = args.TemplateDir
+
+		for i, s := range dependencies {
+			dependencies[i] = filepath.Join(prefix, s)
+		}
+
+		tmpl, err := eng.Factory(f, engine.WithDelims(delimLeft, delimRight), engine.WithDependencies(dependencies))
 		if err != nil {
 			_ = f.Close()
 
